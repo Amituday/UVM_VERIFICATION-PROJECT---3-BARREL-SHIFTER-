@@ -9,11 +9,43 @@ class scoreboard extends uvm_scoreboard;
 
      bit[3:0] result;
 
+     // functional covrage
+
+     covergroup barrel_f;
+      option.per_instance=1; 
+
+      cp_dir : coverpoint in.dir{
+       bins dir_0 = {0};
+        bins dir_1 = {1};
+
+      }
+
+      cp_shift : coverpoint in.shift{
+      bins shift_0[] ={[0:3]};
+      }
+
+      cp_data : coverpoint in.data{
+      bins  low[]={[0:15]};
+    //   bins high[]={[8:15]};
+      }
+
+      cp_result : coverpoint out.result{
+       bins  low[]={[0:15]};
+      // bins high[]={[8:15]};
+      }
+
+       //cp_cross : cross cp_dir , cp_shift ;
+       //cp_cross1 : cross cp_data ,cp_result;
+
+     endgroup
+
 
     function new(string name="scoreboard",uvm_component parent);
     super.new(name,parent);
     fifoin = new("fifoin",this);
     fifoout = new("fifoout",this);
+    barrel_f = new ;
+
 
     endfunction 
 
@@ -46,6 +78,7 @@ class scoreboard extends uvm_scoreboard;
             2'b11: result = {3'b000, in.data[3]};
         endcase
     end
+    barrel_f.sample();
 end 
 
     endtask
